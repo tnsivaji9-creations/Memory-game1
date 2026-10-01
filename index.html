@@ -1,0 +1,959 @@
+﻿<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Class 5 EVS - Climate Change (వాతావరణ మార్పు)</title>
+    <style>
+        :root {
+            --primary: #1B4D3E;
+            --secondary: #27AE60;
+            --accent: #F39C12;
+            --success: #2ECC71;
+            --danger: #E74C3C;
+            --bg-color: #F4F7F6;
+            --card-bg: #FFFFFF;
+            --text-color: #2C3E50;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 { font-size: 1.25rem; margin-bottom: 4px; }
+        header p { font-size: 0.85rem; opacity: 0.9; }
+
+        /* Main Game Container */
+        #game-container {
+            flex: 1;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+            padding-bottom: 75px;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .screen.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+            border: 1px solid #E2E8F0;
+        }
+
+        .teacher-card {
+            background: #E8F8F5;
+            border-left: 5px solid var(--secondary);
+        }
+
+        .story-box {
+            border-left: 4px solid var(--secondary);
+            background: #F8F9FA;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        h2 { font-size: 1.25rem; color: var(--primary); margin-bottom: 10px; text-align: center; }
+        h3 { font-size: 1.05rem; margin-bottom: 6px; }
+        p { font-size: 0.95rem; line-height: 1.4; margin-bottom: 6px; }
+
+        .telugu-text {
+            color: #4A5568;
+            font-size: 0.9rem;
+            display: block;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        /* Form Controls */
+        .form-group { width: 100%; margin-bottom: 12px; text-align: left; }
+        label { font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 4px; }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #CBD5E0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        /* Voice Controls */
+        .voice-btn-group {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+        }
+
+        .btn-voice {
+            background: #8E44AD;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 8px 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-success { background-color: var(--success); }
+        .btn-warning { background-color: var(--accent); }
+
+        /* Progress Bar */
+        .progress-header {
+            width: 100%;
+            background: #E2E8F0;
+            border-radius: 10px;
+            height: 12px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Question Animation Icon */
+        .anim-illustration {
+            width: 90px;
+            height: 90px;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            background: #F8FAFC;
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.98); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(0.98); }
+        }
+
+        /* Quiz Options Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #CBD5E0;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover { border-color: var(--secondary); background: #EBF5FB; }
+        .option-btn.correct { background: #D4EDDA !important; border-color: var(--success) !important; color: #155724; }
+        .option-btn.wrong { background: #F8D7DA !important; border-color: var(--danger) !important; color: #721C24; }
+
+        /* Bottom Fixed Navigation */
+        #bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        /* Dynamic Animations on Result */
+        .medal-anim {
+            font-size: 5rem;
+            margin: 15px 0;
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .claps-anim { animation: shake 0.5s infinite alternate; }
+        @keyframes shake { 0% { transform: rotate(-10deg); } 100% { transform: rotate(10deg); } }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        .result-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #E2E8F0;
+            font-size: 0.9rem;
+        }
+
+        .result-table td:first-child { font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>🎮 Class 5 EVS - Climate Change (వాతావరణ మార్పు)</h1>
+        <p>Interactive Learning, Missions & Quiz Game</p>
+    </header>
+
+    <!-- Main Container -->
+    <div id="game-container">
+
+        <!-- Progress Header -->
+        <div id="progress-container" style="display: none;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: bold;">
+                <span id="progress-text">Mission 1 of 5</span>
+                <span id="score-text">⭐ Score: 0</span>
+            </div>
+            <div class="progress-header">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- SCREEN 1: Welcome & Teacher Details -->
+        <div id="screen-welcome" class="screen active">
+            <div class="card" style="text-align: center;">
+                <h2>Welcome / స్వాగతం!</h2>
+                <p>Learn about Climate Change through Interactive Missions & Games!</p>
+                <span class="telugu-text">వాతావరణ మార్పుల పాఠాన్ని సరదా మిషన్లు మరియు గేమ్‌ల ద్వారా నేర్చుకుందాం!</span>
+                <div class="voice-btn-group" style="justify-content: center; margin-top: 10px;">
+                    <button class="btn-voice" onclick="speak('Welcome to the game on Climate Change.', 'en')">🔊 English Voice</button>
+                    <button class="btn-voice" onclick="speak('వాతావరణ మార్పుల పాఠం గేమ్‌కు స్వాగతం.', 'te')">🔊 తెలుగు వాయిస్</button>
+                </div>
+            </div>
+
+            <!-- Teacher Details -->
+            <div class="card teacher-card">
+                <h3>👨‍🏫 Teacher & Lesson Details / పాఠశాల వివరాలు</h3>
+                <p><strong>Teacher Name:</strong> T. N. SIVAJI</p>
+                <p><strong>Designation:</strong> SGT</p>
+                <p><strong>School:</strong> MPPS M Singupuram</p>
+                <p><strong>Class:</strong> Class 5 (5వ తరగతి)</p>
+                <p><strong>Subject:</strong> Environmental Studies (EVS)</p>
+                <p><strong>Lesson:</strong> Lesson 2 - Climate Change (వాతావరణ మార్పు)</p>
+            </div>
+
+            <button class="btn btn-success" onclick="nextScreen()">Start Game / ప్రారంభించండి ➡️</button>
+        </div>
+
+        <!-- SCREEN 2: Student Details -->
+        <div id="screen-student" class="screen">
+            <div class="card">
+                <h2>Student Details / విద్యార్థి వివరాలు</h2>
+                <div class="form-group">
+                    <label>Student Name / విద్యార్థి పేరు *</label>
+                    <input type="text" id="student-name" placeholder="Enter student name">
+                </div>
+                <div class="form-group">
+                    <label>Class / తరగతి</label>
+                    <input type="text" value="Class 5 / 5 వ తరగతి" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Section / సెక్షన్ (Optional)</label>
+                    <input type="text" id="student-section" placeholder="e.g. A">
+                </div>
+                <div class="form-group">
+                    <label>Roll No / రోల్ నంబర్ (Optional)</label>
+                    <input type="text" id="student-roll" placeholder="e.g. 15">
+                </div>
+            </div>
+            <button class="btn btn-success" onclick="saveStudentDetails()">Continue / కొనసాగించు ➡️</button>
+        </div>
+
+        <!-- SCREEN 3: Interactive Learning Section -->
+        <div id="screen-learn" class="screen">
+            <div class="card">
+                <h2>📖 Learning Section / నేర్చుకుందాం</h2>
+                <p>Read each topic carefully before playing missions!</p>
+            </div>
+
+            <div class="card story-box">
+                <div class="anim-illustration">☀️</div>
+                <h3>1. Weather vs Climate / క్లైమేట్ అంటే ఏమిటి?</h3>
+                <p>The weather conditions prevailing in an area over a long period of time are called climate[span_0](start_span)[span_0](end_span).</p>
+                <span class="telugu-text">ఒక ప్రాంతంలో చాలా కాలం పాటు ఉండే వాతావరణ పరిస్థితుల సగటును క్లైమేట్ (Climate) అంటారు[span_1](start_span)[span_1](end_span).</span>
+                <div class="voice-btn-group">
+                    <button class="btn-voice" onclick="speak('Climate is the weather conditions in an area over a long period of time.', 'en')">🔊 English</button>
+                    <button class="btn-voice" onclick="speak('ఒక ప్రాంతంలో చాలా కాలం పాటు ఉండే వాతావరణ పరిస్థితుల సగటును క్లైమేట్ అంటారు.', 'te')">🔊 తెలుగు</button>
+                </div>
+            </div>
+
+            <div class="card story-box">
+                <div class="anim-illustration">🌋</div>
+                <h3>2. Causes of Climate Change / కారణాలు</h3>
+                <p><strong>Natural:</strong> Volcanoes, cyclones[span_2](start_span)[span_2](end_span).</p>
+                <p><strong>Human-made:</strong> Cutting trees (deforestation), burning fuels, air & water pollution[span_3](start_span)[span_3](end_span).</p>
+                <span class="telugu-text"><strong>సహజ కారణాలు:</strong> అగ్నిపర్వతాలు, తుఫానులు[span_4](start_span)[span_4](end_span).<br><strong>మానవ కారణాలు:</strong> చెట్లను నరకడం, ఇంధనాలను కాల్చడం, పొల్యూషన్ పెంచడం[span_5](start_span)[span_5](end_span).</span>
+                <div class="voice-btn-group">
+                    <button class="btn-voice" onclick="speak('Volcanoes are natural causes. Cutting trees and pollution are human-made causes.', 'en')">🔊 English</button>
+                    <button class="btn-voice" onclick="speak('అగ్నిపర్వతాలు సహజ కారణాలు. చెట్లను నరకడం మరియు కాలుష్యం మానవ కారణాలు.', 'te')">🔊 తెలుగు</button>
+                </div>
+            </div>
+
+            <div class="card story-box">
+                <div class="anim-illustration">🛍️</div>
+                <h3>3. Eco-friendly Choices / పర్యావరణ పరిరక్షణ</h3>
+                <p>Plastic does not decompose easily and harms soil, animals, and humans[span_6](start_span)[span_6](end_span). Use paper bags and jute bags instead[span_7](start_span)[span_7](end_span)!</p>
+                <span class="telugu-text">ప్లాస్టిక్ సులభంగా మట్టిలో కలవదు[span_8](start_span)[span_8](end_span). ప్లాస్టిక్‌కు బదులుగా జ్యూట్ (జనపనార) సంచులు, కాగితపు పెన్నులు ఉపయోగించాలి[span_9](start_span)[span_9](end_span).</span>
+                <div class="voice-btn-group">
+                    <button class="btn-voice" onclick="speak('Avoid plastic. Use jute bags and paper pens instead.', 'en')">🔊 English</button>
+                    <button class="btn-voice" onclick="speak('ప్లాస్టిక్ తగ్గించండి. జ్యూట్ బ్యాగులు, కాగితపు సంచులు వాడండి.', 'te')">🔊 తెలుగు</button>
+                </div>
+            </div>
+
+            <button class="btn btn-success" onclick="completeMission(0)">Start Mission 1 / మిషన్ 1 ప్రారంభించు ➡️</button>
+        </div>
+
+        <!-- SCREEN 4: Mission 1 - Natural vs Human Causes -->
+        <div id="screen-mission1" class="screen">
+            <div class="card">
+                <h2>Mission 1: Natural vs Human-Made Causes</h2>
+                <p>Categorize the causes of climate change correctly!</p>
+                <span class="telugu-text">వాతావరణ మార్పుకు సహజ మరియు మానవ నిర్మిత కారణాలను వర్గీకరించండి!</span>
+                <div class="voice-btn-group">
+                    <button class="btn-voice" onclick="speak('Categorize as Natural or Human-Made Cause.', 'en')">🔊 English</button>
+                    <button class="btn-voice" onclick="speak('సహజ లేదా మానవ నిర్మిత కారణాలుగా వర్గీకరించండి.', 'te')">🔊 తెలుగు</button>
+                </div>
+            </div>
+
+            <div id="m1-container"></div>
+            <button class="btn btn-success" id="m1-check-btn" onclick="checkMission1()">Check Mission 1 / సరిచూడండి 🟢</button>
+        </div>
+
+        <!-- SCREEN 5: Mission 2 - Effects of Climate Change -->
+        <div id="screen-mission2" class="screen">
+            <div class="card">
+                <h2>Mission 2: Effects of Climate Change / ప్రభావాలు</h2>
+                <p>Select whether each statement is an Effect of Climate Change or Not.</p>
+                <span class="telugu-text">ప్రతీ అంశం వాతావరణ మార్పుల యొక్క ప్రభావమో కాదో ఎంచుకోండి.</span>
+            </div>
+
+            <div id="m2-container"></div>
+            <button class="btn btn-success" id="m2-check-btn" onclick="checkMission2()">Submit Mission 2 / సమర్పించు 🟢</button>
+        </div>
+
+        <!-- SCREEN 6: Mission 3 - Plastic vs Eco-Friendly -->
+        <div id="screen-mission3" class="screen">
+            <div class="card">
+                <h2>Mission 3: Plastic & Eco-Friendly Living</h2>
+                <p>Choose the eco-friendly alternative for a healthy planet!</p>
+                <span class="telugu-text">పర్యావరణానికి మేలు చేసే సరైన ప్రత్యామ్నాయాలను ఎంచుకోండి!</span>
+            </div>
+
+            <div id="m3-container"></div>
+            <button class="btn btn-success" id="m3-check-btn" onclick="checkMission3()">Submit Mission 3 / సమర్పించు 🟢</button>
+        </div>
+
+        <!-- SCREEN 7: Final Quiz Game -->
+        <div id="screen-quiz" class="screen">
+            <div class="card" id="quiz-card">
+                <div class="anim-illustration" id="q-anim">🌡️</div>
+                <h3 id="q-num">Question 1</h3>
+                <p id="q-text-en" style="font-weight: bold; font-size: 1.05rem; margin-top: 6px;"></p>
+                <span id="q-text-te" class="telugu-text" style="margin-bottom: 10px;"></span>
+
+                <div class="voice-btn-group">
+                    <button class="btn-voice" onclick="speakCurrentQuestion('en')">🔊 Question (English)</button>
+                    <button class="btn-voice" onclick="speakCurrentQuestion('te')">🔊 ప్రశ్న (తెలుగు)</button>
+                </div>
+
+                <div class="options-grid" id="options-container"></div>
+                <p id="attempt-info" style="font-size: 0.85rem; color: #7F8C8D; margin-top: 10px; font-weight: bold;"></p>
+            </div>
+        </div>
+
+        <!-- SCREEN 8: Final Result Screen -->
+        <div id="screen-result" class="screen">
+            <div class="card" style="text-align: center;">
+                <h2>🎉 Game Result / ఆట ఫలితాలు</h2>
+                <div id="animation-box"></div>
+                <h3 id="score-percentage" style="font-size: 1.8rem; color: var(--secondary); margin: 8px 0;">0%</h3>
+                <p id="score-status-text" style="font-weight: bold; font-size: 1.1rem;"></p>
+            </div>
+
+            <div class="card">
+                <h3>📊 Performance Details / ప్రదర్శన వివరాలు</h3>
+                <table class="result-table">
+                    <tr><td>Student Name / పేరు:</td><td id="res-name">-</td></tr>
+                    <tr><td>Class & Sec / తరగతి:</td><td id="res-class">-</td></tr>
+                    <tr><td>Total Quiz Questions / క్విజ్ ప్రశ్నలు:</td><td id="res-total-q">5</td></tr>
+                    <tr><td>Total Quiz Attempts / మొత్తం ప్రయత్నాలు:</td><td id="res-total-attempts">0</td></tr>
+                    <tr><td>Quiz Points Earned / పొందిన మార్కులు:</td><td id="res-score">0 / 50</td></tr>
+                    <tr><td>Overall Percentage / శాతం:</td><td id="res-percent">0%</td></tr>
+                    <tr><td>Missions Status / మిషన్ల స్థితి:</td><td><span style="color: green; font-weight: bold;">ALL COMPLETED ✅</span></td></tr>
+                </table>
+            </div>
+
+            <div class="card story-box">
+                <h3>💡 What We Learned / మనం నేర్చుకున్నది:</h3>
+                <p>• Climate is the average weather condition over a long period of time[span_10](start_span)[span_10](end_span).</p>
+                <p>• Cutting trees and pollution lead to global warming and severe climate change[span_11](start_span)[span_11](end_span)[span_12](start_span)[span_12](end_span).</p>
+                <p>• Avoiding single-use plastic and planting trees helps save our Earth[span_13](start_span)[span_13](end_span).</p>
+            </div>
+
+            <div class="card teacher-card">
+                <p><strong>Verified by Teacher:</strong> T. N. SIVAJI (SGT, MPPS M Singupuram)</p>
+            </div>
+
+            <button class="btn btn-warning" onclick="restartGame()">🔄 Play Again / మళ్లీ ఆడండి</button>
+        </div>
+
+    </div>
+
+    <!-- Fixed Bottom Navigation -->
+    <div id="bottom-nav">
+        <button class="btn" id="btn-back" onclick="prevScreen()">⬅️ Back</button>
+        <div id="nav-info" style="font-weight: bold; font-size: 0.85rem; color: #555;">Welcome</div>
+        <button class="btn" id="btn-next" onclick="nextScreen()">Next ➡️</button>
+    </div>
+
+    <script>
+        // State Variables
+        let currentScreenIndex = 0;
+        const screens = [
+            'screen-welcome',
+            'screen-student',
+            'screen-learn',
+            'screen-mission1',
+            'screen-mission2',
+            'screen-mission3',
+            'screen-quiz',
+            'screen-result'
+        ];
+
+        let student = { name: '', class: 'Class 5', section: '', roll: '' };
+        let completedMissions = [false, false, false, false];
+
+        // Mission 1 Data: Causes
+        const m1Data = [
+            { text: 'Volcanoes Erupting', telugu: 'అగ్నిపర్వతాలు బద్దలవ్వడం', type: 'natural' },
+            { text: 'Indiscriminate Cutting of Trees', telugu: 'చెట్లను విచక్షణారహితంగా నరకడం', type: 'human' },
+            { text: 'Burning of Fossil Fuels & Vehicle Smoke', telugu: 'ఇంధనాలను కాల్చడం & వాహనాల పొగ', type: 'human' },
+            { text: 'Cyclones in Ocean', telugu: 'సముద్రంలో తుఫానులు రావడం', type: 'natural' }
+        ];
+        let m1Answers = {};
+
+        // Mission 2 Data: Effects
+        const m2Data = [
+            { text: 'Melting of ice in cold regions', telugu: 'మంచు ప్రాంతాల్లో మంచు కరిగిపోవడం', isEffect: true },
+            { text: 'Frequent droughts and floods', telugu: 'తరచూ కరువులు మరియు వరదలు రావడం', isEffect: true },
+            { text: 'Planting more green trees', telugu: 'ఎక్కువగా చెట్లను నాటడం', isEffect: false },
+            { text: 'Forest fires due to extreme heat', telugu: 'అధిక వేడి వల్ల అడవుల్లో కార్చిచ్చు రగులుకోవడం', isEffect: true }
+        ];
+        let m2Answers = {};
+
+        // Mission 3 Data: Eco-friendly Choices
+        const m3Data = [
+            {
+                q: 'Which item should we use instead of disposable plastic carry bags?',
+                telugu: 'ప్లాస్టిక్ సంచులకు బదులుగా మనం దేనిని ఉపయోగించాలి?',
+                options: ['Jute & Paper Bags', 'Thin plastic covers', 'Non-recyclable wrappers'],
+                ans: 0
+            },
+            {
+                q: 'Why is plastic waste harmful to the Earth?',
+                telugu: 'ప్లాస్టిక్ చెత్త భూమికి ఎందుకు హానికరం?',
+                options: ['It dissolves in water quickly', 'It does not decompose easily in soil', 'It grows into plants'],
+                ans: 1
+            }
+        ];
+        let m3Answers = {};
+
+        // Quiz Questions based on Textbook Page 178-184
+        const questions = [
+            {
+                anim: "🌤️",
+                en: "What are the weather conditions over a long period of time called?",
+                te: "చాలా కాలం పాటు ఉండే వాతావరణ పరిస్థితుల సగటును ఏమంటారు?",
+                options: [
+                    { en: "Climate", te: "క్లైమేట్ (Climate)", correct: true },
+                    { en: "Season for one day", te: "ఒక్క రోజు వాతావరణం", correct: false },
+                    { en: "Storm", te: "తుఫాను", correct: false }
+                ]
+            },
+            {
+                anim: "🌋",
+                en: "Which of the following is a NATURAL cause of climate change?",
+                te: "వీటిలో వలస/వాతావరణ మార్పుకు సహజ సిద్ధమైన కారణం ఏది?",
+                options: [
+                    { en: "Volcanoes", te: "అగ్నిపర్వతాలు (Volcanoes)", correct: true },
+                    { en: "Factory Pollution", te: "ఫ్యాక్టరీల కాలుష్యం", correct: false },
+                    { en: "Cutting Trees", te: "చెట్లను నరకడం", correct: false }
+                ]
+            },
+            {
+                anim: "🪓",
+                en: "What happens when we cut trees indiscriminately (Deforestation)?",
+                te: "చెట్లను విచక్షణారహితంగా నరికివేస్తే ఏమవుతుంది?",
+                options: [
+                    { en: "Causes global warming & climate change", te: "భూమి వేడెక్కి వాతావరణ మార్పులు వస్తాయి", correct: true },
+                    { en: "Increases rainfall every day", te: "ప్రతిరోజూ వర్షాలు పెరుగుతాయి", correct: false },
+                    { en: "Keeps air very clean", te: "గాలి చాలా శుభ్రంగా ఉంటుంది", correct: false }
+                ]
+            },
+            {
+                anim: "🌀",
+                en: "What is a Cyclone?",
+                te: "తుఫాను (Cyclone) అంటే ఏమిటి?",
+                options: [
+                    { en: "A strong storm with high-speed winds & rain", te: "వేగవంతమైన ఈదురుగాలులు మరియు భారీ వర్షం", correct: true },
+                    { en: "A very cold sunny day", te: "ఎండగా ఉండే చల్లని రోజు", correct: false },
+                    { en: "A small pond drying up", te: "చిన్న చెరువు ఎండిపోవడం", correct: false }
+                ]
+            },
+            {
+                anim: "🛍️",
+                en: "Why should we avoid single-use plastic items?",
+                te: "ఒక్కసారి వాడి పడేసే ప్లాస్టిక్ వస్తువులను ఎందుకు నిరోధించాలి?",
+                options: [
+                    { en: "They pollute soil/water and cause cancer/diseases", te: "అవి మట్టిని, నీటిని కలుషితం చేసి రోగాలకు కారణమవుతాయి", correct: true },
+                    { en: "They are very eco-friendly", te: "అవి పర్యావరణానికి చాలా మంచివి", correct: false },
+                    { en: "Animals love to eat plastic", te: "జంతువులు ప్లాస్టిక్‌ను ఇష్టంగా తింటాయి", correct: false }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let attemptsCurrentQ = 0;
+        let totalAttemptsCount = 0;
+        let totalScoreObtained = 0;
+        const maxScorePerQuestion = 10;
+
+        // Bilingual Speech Engine
+        function speak(text, lang) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const ut = new SpeechSynthesisUtterance(text);
+                ut.lang = (lang === 'te') ? 'te-IN' : 'en-US';
+                ut.rate = 0.85;
+                window.speechSynthesis.speak(ut);
+            }
+        }
+
+        function speakCurrentQuestion(lang) {
+            const q = questions[currentQIndex];
+            if (lang === 'te') speak(q.te, 'te');
+            else speak(q.en, 'en');
+        }
+
+        // Navigation Controller
+        function updateScreen() {
+            screens.forEach((id, idx) => {
+                const el = document.getElementById(id);
+                if (idx === currentScreenIndex) el.classList.add('active');
+                else el.classList.remove('active');
+            });
+
+            const progContainer = document.getElementById('progress-container');
+            if (currentScreenIndex >= 3 && currentScreenIndex <= 6) {
+                progContainer.style.display = 'block';
+                let stepNum = currentScreenIndex - 2;
+                document.getElementById('progress-text').innerText = `Step ${stepNum} of 5`;
+                document.getElementById('progress-fill').style.width = `${(stepNum / 5) * 100}%`;
+            } else {
+                progContainer.style.display = 'none';
+            }
+
+            document.getElementById('btn-back').style.visibility = (currentScreenIndex === 0) ? 'hidden' : 'visible';
+            document.getElementById('btn-next').style.visibility = (currentScreenIndex === screens.length - 1) ? 'hidden' : 'visible';
+
+            const labels = ['Welcome', 'Student Info', 'Learning', 'Mission 1', 'Mission 2', 'Mission 3', 'Quiz Game', 'Result'];
+            document.getElementById('nav-info').innerText = labels[currentScreenIndex];
+
+            // Initializers
+            if (currentScreenIndex === 3) initMission1();
+            if (currentScreenIndex === 4) initMission2();
+            if (currentScreenIndex === 5) initMission3();
+            if (currentScreenIndex === 6) loadQuestion();
+        }
+
+        function nextScreen() {
+            if (currentScreenIndex === 1 && !student.name) {
+                alert('Please enter Student Name / దయచేసి విద్యార్థి పేరు టైప్ చేయండి!');
+                return;
+            }
+            if (currentScreenIndex >= 3 && currentScreenIndex <= 5) {
+                let mIdx = currentScreenIndex - 3;
+                if (!completedMissions[mIdx]) {
+                    alert('Please complete the current mission first! / దయచేసి మొదట ఈ మిషన్ పూర్తి చేయండి!');
+                    return;
+                }
+            }
+            if (currentScreenIndex === 6) {
+                alert('Complete all quiz questions! / క్విజ్ ప్రశ్నలు పూర్తి చేయండి!');
+                return;
+            }
+
+            if (currentScreenIndex < screens.length - 1) {
+                currentScreenIndex++;
+                updateScreen();
+            }
+        }
+
+        function prevScreen() {
+            if (currentScreenIndex > 0) {
+                currentScreenIndex--;
+                updateScreen();
+            }
+        }
+
+        function saveStudentDetails() {
+            const val = document.getElementById('student-name').value.trim();
+            if (!val) {
+                alert('Enter student name / పేరు నమోదు చేయండి');
+                return;
+            }
+            student.name = val;
+            student.section = document.getElementById('student-section').value.trim();
+            student.roll = document.getElementById('student-roll').value.trim();
+            nextScreen();
+        }
+
+        function completeMission(mIndex) {
+            completedMissions[mIndex] = true;
+            speak("Mission Complete!", "en");
+            alert(`🎉 Mission Complete! / దశ పూర్తైంది!`);
+            nextScreen();
+        }
+
+        /* --- MISSION 1 LOGIC --- */
+        function initMission1() {
+            const container = document.getElementById('m1-container');
+            if (container.children.length > 0) return;
+
+            m1Data.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <p><strong>${item.text}</strong></p>
+                    <span class="telugu-text">${item.telugu}</span>
+                    <div style="margin-top: 8px;">
+                        <button class="btn" id="m1_nat_${index}" style="background:#27AE60;" onclick="setM1Answer(${index}, 'natural')">🌋 Natural (సహజం)</button>
+                        <button class="btn" id="m1_hum_${index}" style="background:#E67E22;" onclick="setM1Answer(${index}, 'human')">🪓 Human-made (మానవ కారణం)</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function setM1Answer(index, choice) {
+            m1Answers[index] = choice;
+            document.getElementById(`m1_nat_${index}`).style.opacity = choice === 'natural' ? '1' : '0.4';
+            document.getElementById(`m1_hum_${index}`).style.opacity = choice === 'human' ? '1' : '0.4';
+        }
+
+        function checkMission1() {
+            if (Object.keys(m1Answers).length < m1Data.length) {
+                alert('Please categorize all items! / అన్నింటినీ వర్గీకరించండి!');
+                return;
+            }
+
+            let allCorrect = true;
+            m1Data.forEach((item, index) => {
+                if (m1Answers[index] !== item.type) allCorrect = false;
+            });
+
+            if (allCorrect) {
+                document.getElementById('m1-check-btn').disabled = true;
+                completeMission(1);
+            } else {
+                speak("తప్పు, మరలా ప్రయత్నించండి", "te");
+                alert('❌ Some choices are incorrect. Try again! / కొన్ని సమాధానాలు తప్పు. మరలా ప్రయత్నించండి!');
+            }
+        }
+
+        /* --- MISSION 2 LOGIC --- */
+        function initMission2() {
+            const container = document.getElementById('m2-container');
+            if (container.children.length > 0) return;
+
+            m2Data.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <p><strong>${item.text}</strong></p>
+                    <span class="telugu-text">${item.telugu}</span>
+                    <div style="margin-top: 8px;">
+                        <button class="btn" id="m2_yes_${index}" style="background:#2ECC71;" onclick="setM2Answer(${index}, true)">✅ Effect (ప్రభావం)</button>
+                        <button class="btn" id="m2_no_${index}" style="background:#E74C3C;" onclick="setM2Answer(${index}, false)">❌ Not an effect (కాదు)</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function setM2Answer(index, choice) {
+            m2Answers[index] = choice;
+            document.getElementById(`m2_yes_${index}`).style.opacity = choice === true ? '1' : '0.4';
+            document.getElementById(`m2_no_${index}`).style.opacity = choice === false ? '1' : '0.4';
+        }
+
+        function checkMission2() {
+            if (Object.keys(m2Answers).length < m2Data.length) {
+                alert('Please select for all statements! / అన్నింటినీ ఎంచుకోండి!');
+                return;
+            }
+
+            let allCorrect = true;
+            m2Data.forEach((item, index) => {
+                if (m2Answers[index] !== item.isEffect) allCorrect = false;
+            });
+
+            if (allCorrect) {
+                document.getElementById('m2-check-btn').disabled = true;
+                completeMission(2);
+            } else {
+                speak("తప్పు, మరలా ప్రయత్నించండి", "te");
+                alert('❌ Check your selections and try again! / సరిచూడండి!');
+            }
+        }
+
+        /* --- MISSION 3 LOGIC --- */
+        function initMission3() {
+            const container = document.getElementById('m3-container');
+            if (container.children.length > 0) return;
+
+            m3Data.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <p><strong>${index + 1}. ${item.q}</strong></p>
+                    <span class="telugu-text">${item.telugu}</span>
+                    <div style="margin-top: 8px;">
+                        ${item.options.map((opt, oIdx) => `
+                            <div style="margin: 4px 0;">
+                                <label><input type="radio" name="m3_q${index}" onchange="m3Answers[${index}] = ${oIdx}"> ${opt}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function checkMission3() {
+            if (Object.keys(m3Answers).length < m3Data.length) {
+                alert('Please answer all questions! / అన్నింటికి సమాధానం ఇవ్వండి!');
+                return;
+            }
+
+            let correct = true;
+            m3Data.forEach((item, index) => {
+                if (m3Answers[index] !== item.ans) correct = false;
+            });
+
+            if (correct) {
+                document.getElementById('m3-check-btn').disabled = true;
+                completeMission(3);
+            } else {
+                speak("తప్పు, మరలా ప్రయత్నించండి", "te");
+                alert('❌ Review your answers and try again! / మళ్లీ ప్రయత్నించండి!');
+            }
+        }
+
+        /* --- QUIZ LOGIC WITH ATTEMPTS SCORING --- */
+        function loadQuestion() {
+            attemptsCurrentQ = 0;
+            const q = questions[currentQIndex];
+
+            document.getElementById('q-anim').innerText = q.anim;
+            document.getElementById('q-num').innerText = `Question ${currentQIndex + 1} of ${questions.length}`;
+            document.getElementById('q-text-en').innerText = q.en;
+            document.getElementById('q-text-te').innerText = q.te;
+            document.getElementById('attempt-info').innerText = `Attempts for this question: 0`;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            let shuffled = [...q.options].sort(() => Math.random() - 0.5);
+
+            shuffled.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<strong>${opt.en}</strong><span class="telugu-text">${opt.te}</span>`;
+                btn.onclick = () => handleAnswerSelect(opt, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleAnswerSelect(selectedOpt, btnElement) {
+            attemptsCurrentQ++;
+            totalAttemptsCount++;
+            document.getElementById('attempt-info').innerText = `Attempts for this question: ${attemptsCurrentQ}`;
+
+            if (selectedOpt.correct) {
+                btnElement.classList.add('correct');
+                speak("Correct!", "en");
+
+                let pointsEarned = 0;
+                if (attemptsCurrentQ === 1) pointsEarned = 10;
+                else if (attemptsCurrentQ === 2) pointsEarned = 7;
+                else pointsEarned = 4;
+
+                totalScoreObtained += pointsEarned;
+                document.getElementById('score-text').innerText = `⭐ Score: ${totalScoreObtained}`;
+
+                const allBtns = document.querySelectorAll('.option-btn');
+                allBtns.forEach(b => b.onclick = null);
+
+                setTimeout(() => {
+                    currentQIndex++;
+                    if (currentQIndex < questions.length) {
+                        loadQuestion();
+                    } else {
+                        showResults();
+                    }
+                }, 1200);
+
+            } else {
+                btnElement.classList.add('wrong');
+                btnElement.onclick = null;
+                speak("తప్పు, మరలా ప్రయత్నించండి", "te");
+            }
+        }
+
+        /* --- FINAL RESULT & ANIMATIONS --- */
+        function showResults() {
+            currentScreenIndex = 7;
+            updateScreen();
+
+            const maxPossible = questions.length * maxScorePerQuestion; // 50
+            const percentage = Math.round((totalScoreObtained / maxPossible) * 100);
+
+            document.getElementById('res-name').innerText = student.name || 'Student';
+            document.getElementById('res-class').innerText = `${student.class} ${student.section ? '('+student.section+')' : ''}`;
+            document.getElementById('res-total-attempts').innerText = totalAttemptsCount;
+            document.getElementById('res-score').innerText = `${totalScoreObtained} / ${maxPossible}`;
+            document.getElementById('res-percent').innerText = `${percentage}%`;
+            document.getElementById('score-percentage').innerText = `${percentage}%`;
+
+            const animBox = document.getElementById('animation-box');
+            const statusTxt = document.getElementById('score-status-text');
+
+            if (percentage <= 50) {
+                animBox.innerHTML = `<div class="medal-anim">💪</div>`;
+                statusTxt.innerText = "Keep Trying! / ఇంకా ప్రయత్నించండి!";
+                speak("Keep trying! Work harder next time.", "en");
+            } 
+            else if (percentage <= 60) {
+                animBox.innerHTML = `<div class="medal-anim claps-anim">👏</div>`;
+                statusTxt.innerText = "Good Effort! (Claps) / బాగుంది!";
+                speak("Good job! Claps for your effort.", "en");
+            } 
+            else if (percentage <= 75) {
+                animBox.innerHTML = `<div class="medal-anim">🥉</div>`;
+                statusTxt.innerText = "Bronze Medal Winner! / బ్రాంజ్ మెడల్!";
+                speak("Congratulations! You won a Bronze Medal.", "en");
+            } 
+            else if (percentage <= 90) {
+                animBox.innerHTML = `<div class="medal-anim">🥈</div>`;
+                statusTxt.innerText = "Silver Medal Winner! / సిల్వర్ మెడల్!";
+                speak("Great job! You won a Silver Medal.", "en");
+            } 
+            else {
+                animBox.innerHTML = `<div class="medal-anim">🥇</div>`;
+                statusTxt.innerText = "Gold Medal Winner! / గోల్డ్ మెడల్!";
+                speak("Outstanding performance! You won a Gold Medal.", "en");
+            }
+        }
+
+        function restartGame() {
+            currentQIndex = 0;
+            totalAttemptsCount = 0;
+            totalScoreObtained = 0;
+            completedMissions = [false, false, false, false];
+            m1Answers = {};
+            m2Answers = {};
+            m3Answers = {};
+            document.getElementById('m1-container').innerHTML = '';
+            document.getElementById('m2-container').innerHTML = '';
+            document.getElementById('m3-container').innerHTML = '';
+            document.getElementById('score-text').innerText = `⭐ Score: 0`;
+            currentScreenIndex = 0;
+            updateScreen();
+        }
+
+        window.onload = () => {
+            updateScreen();
+        };
+    </script>
+</body>
+</html>
+
